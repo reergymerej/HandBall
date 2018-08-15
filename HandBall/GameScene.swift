@@ -26,21 +26,23 @@ class GameScene: SKScene {
         
         ball.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(50))
         ball.physicsBody?.allowsRotation = false
-        ball.physicsBody?.restitution = 0.5
+        ball.physicsBody?.restitution = 1.0
         ball.physicsBody?.affectedByGravity = false
+        // ball.physicsBody?.linearDamping = 0.0
+        ball.physicsBody?.friction = 0.0
         addChild(ball)
-        ball.physicsBody?.applyImpulse(CGVector(dx: 200, dy: 200))
+    }
+    
+    func getTouchedBody(_ touch: UITouch) -> SKPhysicsBody? {
+        return physicsWorld.body(at: getPointFromTouch(touch))
     }
 
-    func touchDown(atPoint pos : CGPoint) {
+    func getPointFromTouch(_ touch: UITouch) -> CGPoint {
+        let location = touch.location(in: self.view)
+        let y = size.height - location.y
+        return CGPoint(x: location.x, y: y)
     }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-    }
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     }
     
@@ -48,6 +50,13 @@ class GameScene: SKScene {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            if let body = getTouchedBody(touch) {
+                let shove = CGVector(dx: 23.0, dy: 100.0)
+                let point = getPointFromTouch(touch)
+                body.applyImpulse(shove, at: point)
+            }
+        }
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
