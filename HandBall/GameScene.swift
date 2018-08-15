@@ -13,22 +13,34 @@ class GameScene: SKScene {
     
 
     override func didMove(to view: SKView) {
-        self.backgroundColor = SKColor.cyan
+        self.backgroundColor = SKColor.black
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         addBall()
+        addPaddle()
+    }
+    
+    func addPaddle() {
+        let paddle = SKShapeNode(rect: CGRect(x: -100, y: -25, width: 200, height: 50))
+        paddle.fillColor = SKColor.darkGray
+        paddle.strokeColor = SKColor.black
+        paddle.position = CGPoint(x: frame.midX, y: frame.midY - 100)
+        
+        paddle.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 200, height: 50))
+        paddle.physicsBody?.affectedByGravity = false
+        addChild(paddle)
     }
     
     func addBall() {
-        let ball = SKShapeNode(circleOfRadius: CGFloat(50))
-        ball.strokeColor = SKColor.darkGray
-        ball.fillColor = SKColor.gray
+        let ballSize = CGFloat(50)
+        let ball = SKShapeNode(circleOfRadius: ballSize)
+        ball.strokeColor = SKColor.black
+        ball.fillColor = SKColor.cyan
         ball.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         
-        ball.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(50))
+        ball.physicsBody = SKPhysicsBody(circleOfRadius: ballSize)
         ball.physicsBody?.allowsRotation = false
         ball.physicsBody?.restitution = 1.0
         ball.physicsBody?.affectedByGravity = false
-        // ball.physicsBody?.linearDamping = 0.0
         ball.physicsBody?.friction = 0.0
         addChild(ball)
     }
